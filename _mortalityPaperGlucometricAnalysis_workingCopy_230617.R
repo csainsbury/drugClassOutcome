@@ -175,7 +175,6 @@ reportDrugProportions<-function(cases,controlPool) {
 
 }
 
-
 simpleSurvivalPlot_SUcaseVScontrol<-function(inputFrame,ylimMin,postDischargeStartDay) {
   
   SurvivalData<-inputFrame
@@ -952,6 +951,14 @@ sink(textfilename)
 	print('prop test. hypo ep per day')
 	print(prop.test(c(sum(testOutputCaseControl$caseHypoEpisodes), sum(testOutputCaseControl$controlHypoEpisodes)), c(sum(testOutputCaseControl$caseAdmissionDurationDays), sum(testOutputCaseControl$controlAdmissionDurationDays))))
 	
+  	# hypo rate comparison
+  	testOutputCaseControl$caseHypoRate <- testOutputCaseControl$caseHypoEpisodes / testOutputCaseControl$caseAdmissionDurationDays
+  	testOutputCaseControl$controlHypoRate <- testOutputCaseControl$controlHypoEpisodes / testOutputCaseControl$controlAdmissionDurationDays
+  	
+  	hypoRateWilcox<-wilcox.test(testOutputCaseControl$caseHypoRate,testOutputCaseControl$controlHypoRate,paired=F)
+  	print("hypo rate wilcox:");print(hypoRateWilcox)
+  	
+	
 	ttestAdmissionDuration<-t.test(log(testOutputCaseControl$caseAdmissionDurationDays),log(testOutputCaseControl$controlAdmissionDurationDays))
 	print("admissionDuration ttest:");print(ttestAdmissionDuration)
 	
@@ -1364,7 +1371,7 @@ set.seed(42)
 ## drug test 1
 cases<-subset(admissionsWithDrugData_testSet,preSU==1 & preIns==0 & preMF==1)
 controlPool<-subset(admissionsWithDrugData_testSet,preSU==0 & preIns==0 & preMF==1)
-controlSelection(cases,controlPool,paste("group1",sep=""),1,80)
+controlSelection(cases,controlPool,paste("group1",sep=""),1,90)
 
 
 ## drug test 2
