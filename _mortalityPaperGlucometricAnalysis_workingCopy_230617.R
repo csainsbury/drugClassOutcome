@@ -223,7 +223,7 @@ simpleSurvivalPlot_SUcaseVScontrol<-function(inputFrame,ylimMin,postDischargeSta
   # mfitAge50<-survfit(Surv(timeToDeathInterval, shortDeathEvent) ~ (caseFlag == 1), data = SurvivalData)
   mfitAge50<-survfit(Surv(timeToDeathInterval, shortDeathEvent) ~ (case_control == 1), data = SurvivalData)
   shortPlotTitle <- paste("Mortality, time ",round(shortCensorPeriodStartDay)/DaySeconds," to ",round(max(SurvivalData$timeToDeathInterval))/DaySeconds," days\n n= ",nrow(SurvivalData),", threshold: ",quantile(SurvivalData$hba1cIQRinRange)[3],sep="")
-  plot(mfitAge50,mark.time=T,lty=1:6,conf.int=F,col=c("black","red","blue","green","orange","purple"),main=shortPlotTitle,xlim=c(shortCensorPeriodStartDay,round(max(SurvivalData$timeToDeathInterval))),lwd=3,ylim=c(ylimMin,1))
+  plot(mfitAge50,mark.time=F,lty=1:6,conf.int=F,col=c("black","black", "red","blue","green","orange","purple"),main=shortPlotTitle,xlim=c(shortCensorPeriodStartDay,round(max(SurvivalData$timeToDeathInterval))),lwd=5, ylim=c(ylimMin,1))
  # mfitAge50.coxph<-coxph(Surv(timeToDeathInterval, shortDeathEvent) ~ (caseFlag == 1), data = SurvivalData)
   
   mfitAge50.coxph<-coxph(Surv(timeToDeathInterval, shortDeathEvent) ~ (case_control == 1) + age + medianGlu + admissionDurationDays + diabetesDurationYears + sexNumber, data = SurvivalData)
@@ -231,7 +231,8 @@ simpleSurvivalPlot_SUcaseVScontrol<-function(inputFrame,ylimMin,postDischargeSta
   pVal <- summary(mfitAge50.coxph)$coef[,5]; HR <- round(exp(coef(mfitAge50.coxph)),2)
   legendText <- paste("p = ",pVal," | HR = ",HR,sep="")
   summarySurvfit <- summary(mfitAge50); legendNames <- row.names(summarySurvfit$table)
-  legend("bottomleft",c(legendNames),lty=1:6,col=c("black","red","blue","green","orange","purple"),cex=0.8); legend("topright",legendText,cex=0.6)
+  # legend("bottomleft",c(legendNames),lty=1:6,col=c("black","red","blue","green","orange","purple"),cex=0.8)
+  # legend("topright",legendText,cex=0.6)
   
   print(mfitAge50.coxph)
   
