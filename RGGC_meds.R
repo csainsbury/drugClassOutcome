@@ -400,7 +400,7 @@ hypoOccurenceDuringAdmission<-function(testSet,longestAdmission) {
 }
 
 # load pre calculated data.table per admission data
-summaryOutputName <- paste("../GlCoSy/output/DTwithPerIDdata.csv",sep=""); DT<-read.csv(summaryOutputName, header=TRUE , sep="," , row.names=NULL)
+summaryOutputName <- paste("~/R/GlCoSy/source/DTwithPerIDdata.csv",sep=""); DT<-read.csv(summaryOutputName, header=TRUE , sep="," , row.names=NULL)
 DT<-as.data.frame(DT)
 	# extract unix epoch date for deathDate
 	datetime = DT$DeathDate
@@ -419,11 +419,29 @@ DT<-as.data.frame(DT)
 
 DT<-data.table(DT)
 
-inPutName<-paste("../GlCoSy/source/GGC_meds.txt",sep=",")
+inPutName<-paste("~/R/GlCoSy/source/GGC_meds.txt",sep=",")
 medsExSUData <- read.csv(inPutName, header=TRUE , sep="," , row.names=NULL)
 
-inPutName<-paste("../GlCoSy/source/GGC_SU.txt",sep=",")
+inPutName<-paste("~/R/GlCoSy/source/GGC_SU.txt",sep=",")
 SUData <- read.csv(inPutName, header=TRUE , sep="," , row.names=NULL)
+
+## code to find the proportion of SUs that are gliclazide
+
+# datetime = SUData$PrescriptionDateTime
+# dateExtract = substr(datetime,1,10)						# extract time only from date / time information
+# dateplustime = strptime(datetime,"%Y-%m-%d") 	# convert date and time to useable format
+# dateplustime1 <- as.numeric(dateplustime) # convert date time data to numerical values (absolute value is in seconds)
+# SUData$dateplustime1<-dateplustime1 # ? an hour out - may need adjusted
+# 
+# 
+# # cut out all prescriptions before 1-1-2009 for now - as linking to admissions
+# SUData<-subset(SUData,dateplustime1>=1230768000)
+# # cut out all prescriptions after the last death for now - as linking to admissions
+# SUData<-subset(SUData,dateplustime1<=1420934400)
+# 
+# SUData$flagGliclazide <- 0
+# SUData$flagGliclazide[grep("Gliclazide", SUData$DrugName, ignore.case = TRUE)] <- 1
+
 
 medsData<-rbind(medsExSUData,SUData)
 
